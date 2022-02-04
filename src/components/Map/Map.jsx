@@ -6,9 +6,9 @@ import { Rating } from '@material-ui/lab';
 
 import useStyles from './styles';
 
-const Map = ({ setCoordinates, setBounds, coordinates }) => {
+const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
   const classes = useStyles();
-  const isMobile = useMediaQuery('(min-width:600px)')
+  const isDesktop = useMediaQuery('(min-width:600px)')
 
   return (
     <div className={classes.mapContainer}>
@@ -25,7 +25,32 @@ const Map = ({ setCoordinates, setBounds, coordinates }) => {
         }}
         onChildClick={''}
       >
+        {places?.map((place, i) => (
+          <div
+            className={classes.markerContainer}
+            lat={Number(place.latitude)}
+            lng={Number(place.longitude)}
+            key={i}
+          >
+            {
+              !isDesktop ? (
+                <LocationOnOutlinedIcon color="primary" fontSize="large" />
+              ) : (
+                <Paper elevation={3} className={classes.paper}>
+                  <Typography className={classes.typography} variant="subtitle2" gutterBottom>
+                    {place.name}
+                  </Typography>
+                  <img 
+                    className={classes.pointer}
+                    src={place.photo ? place.photo.images.large.url : 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'}
+                    alt={place.name}
+                  />
 
+                </Paper>
+              )
+            }
+          </div>
+        ))}
       </GoogleMapReact>
     </div>
   );
